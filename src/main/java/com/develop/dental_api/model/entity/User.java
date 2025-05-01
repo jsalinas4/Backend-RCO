@@ -13,12 +13,18 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer userId;
 
     @Column(unique = true, nullable = false)
     private String email;
@@ -26,7 +32,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "created_at")
+    @Column(nullable = false)
+    private String role;
+
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
@@ -35,6 +44,10 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private ClinicalRecord clinicalRecord;
 
-    @OneToMany(mappedBy = "user")
-    private List<AppointmentService> appointmentServices;
+    @OneToMany(mappedBy = "dentist")
+    private List<Appointment> dentistAppointments;
+
+    @OneToMany(mappedBy = "patient")
+    private List<Appointment> patientAppointments;
+
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class RegisterUserResponseDTO {
+public class AppointmentResponseDTO {
     private String message;
-    private Integer userId;
+    private Long appointmentId;
 }

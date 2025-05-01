@@ -12,12 +12,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @Entity
 @Table(name = "services")
 public class Service {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer serviceId;
 
     @Column(nullable = false)
     private String name;
@@ -26,15 +32,16 @@ public class Service {
 
     private BigDecimal price;
 
-    @Column(name = "is_recurring")
     private Boolean isRecurring;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @OneToMany(mappedBy = "service")
     private List<Appointment> appointments;
 
     @OneToMany(mappedBy = "service")
-    private List<TreatmentDone> treatments;
+    private List<TreatmentDone> treatmentsDone;
+
 }
+

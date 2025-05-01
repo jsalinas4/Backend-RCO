@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class RegisterUserResponseDTO {
+public class MessageResponseDTO {
     private String message;
-    private Integer userId;
 }
