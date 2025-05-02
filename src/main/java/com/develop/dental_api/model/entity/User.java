@@ -3,6 +3,8 @@ package com.develop.dental_api.model.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.develop.dental_api.model.enums.Role;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,7 +35,7 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    private String role;
+    private Role role;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();

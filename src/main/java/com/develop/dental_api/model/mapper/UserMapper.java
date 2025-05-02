@@ -1,6 +1,5 @@
 package com.develop.dental_api.model.mapper;
 
-import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -34,5 +33,6 @@ public interface UserMapper {
     @Mapping(target = "role", source = "user.role")
     UserProfileDTO toUserProfileDTO(User user, Profile profile);
 
+    @Mapping(target = "id", source = "user.userId")
     UserLoginDTO toUserLoginDTO(User user);
 }

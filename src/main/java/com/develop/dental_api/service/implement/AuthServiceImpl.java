@@ -2,6 +2,9 @@ package com.develop.dental_api.service.implement;
 
 import java.time.LocalDateTime;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.develop.dental_api.model.dto.ChangePasswordDTO;
@@ -13,10 +16,12 @@ import com.develop.dental_api.model.dto.RegisterUserResponseDTO;
 import com.develop.dental_api.model.entity.ClinicalRecord;
 import com.develop.dental_api.model.entity.Profile;
 import com.develop.dental_api.model.entity.User;
+import com.develop.dental_api.model.enums.Role;
 import com.develop.dental_api.model.mapper.UserMapper;
 import com.develop.dental_api.repository.ClinicalRecordRepository;
 import com.develop.dental_api.repository.ProfileRepository;
 import com.develop.dental_api.repository.UserRepository;
+import com.develop.dental_api.security.JwtService;
 import com.develop.dental_api.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,6 +34,10 @@ public class AuthServiceImpl implements AuthService {
     private final ProfileRepository profileRepository;
     private final UserMapper userMapper;
     private final ClinicalRecordRepository clinicalRecordRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     @Override
     public RegisterUserResponseDTO register(RegisterUserRequestDTO dto) {
@@ -44,7 +53,8 @@ public class AuthServiceImpl implements AuthService {
 
         
         User user = userMapper.toUserEntity(dto);
-        user.setRole(dto.getRole());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setRole(Role.valueOf(dto.getRole().toUpperCase()));
         user = userRepository.save(user);
 
         
@@ -65,11 +75,20 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByEmail(dto.getEmail())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        if (!user.getPassword().equals(dto.getPassword())) {
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             throw new RuntimeException("Contraseña incorrecta");
         }
 
-        return new LoginResponseDTO("TOKEN_FAKE", userMapper.toUserLoginDTO(user));
+        // Construir objeto UserDetails para generar el token
+        UserDetails userDetails = org.springframework.security.core.userdetails.User
+                .withUsername(user.getEmail())
+                .password(user.getPassword())
+                .roles(user.getRole().name()) // Si es enum
+                .build();
+
+        String token = jwtService.generateToken(userDetails);
+
+        return new LoginResponseDTO(token, userMapper.toUserLoginDTO(user));
     }
 
     @Override
