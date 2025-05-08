@@ -79,11 +79,11 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Contraseña incorrecta");
         }
 
-        // Construir objeto UserDetails para generar el token
+        
         UserDetails userDetails = org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
                 .password(user.getPassword())
-                .roles(user.getRole().name()) // Si es enum
+                .roles(user.getRole().name()) 
                 .build();
 
         String token = jwtService.generateToken(userDetails);

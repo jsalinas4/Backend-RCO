@@ -18,7 +18,7 @@ import com.develop.dental_api.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://odontologiaweb.netlify.app")
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor

@@ -6,7 +6,8 @@ import com.develop.dental_api.model.dto.PaymentResponseDTO;
 
 public interface PaymentService {
 
-    PaymentResponseDTO registerPayment(PaymentRequestDTO dto);
+    String registerPayment(Integer appointmentId) throws Exception;
 
+    void updatePaymentStatus(String paymentId) throws Exception;
     PaymentDetailDTO getPaymentDetail(Integer paymentId);
 }

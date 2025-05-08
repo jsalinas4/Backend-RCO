@@ -33,10 +33,13 @@ public class Payment {
     private BigDecimal amount;
 
     @Column(name = "payment_date")
-    private LocalDateTime paymentDate = LocalDateTime.now();
+    private LocalDateTime paymentDate;
 
     private String paymentMethod;
     private String status;
+
+    @Column(name = "mercado_pago_id", unique = true)
+    private String mercadoPagoId;
 
 }
 

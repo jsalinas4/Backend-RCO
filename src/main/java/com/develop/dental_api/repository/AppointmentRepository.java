@@ -1,5 +1,6 @@
 package com.develop.dental_api.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     List<Appointment> findByPatient(User patient);
     List<Appointment> findByDentist(User dentist);
     List<Appointment> findByPatient_UserId(Integer id);
+    List<Appointment> findByDentistAndAppointmentDateBetween(User dentist, LocalDateTime start, LocalDateTime end);
+    boolean existsByDentistAndAppointmentDateBetween(User dentist, LocalDateTime start, LocalDateTime end);
+
 }

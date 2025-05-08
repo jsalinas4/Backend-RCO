@@ -1,5 +1,8 @@
 package com.develop.dental_api.api;
 
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +19,7 @@ import com.develop.dental_api.service.PaymentService;
 
 import lombok.RequiredArgsConstructor;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://odontologiaweb.netlify.app")
 @RestController
 @RequestMapping("/api/payments")
 @RequiredArgsConstructor
@@ -24,9 +27,15 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    @PostMapping
-    public ResponseEntity<PaymentResponseDTO> registerPayment(@RequestBody PaymentRequestDTO request) {
-        return ResponseEntity.ok(paymentService.registerPayment(request));
+    @PostMapping("/create/{appointmentId}")
+    public ResponseEntity<Map<String, String>> iniciarPago(@PathVariable Integer appointmentId) {
+        try {
+            String url = paymentService.registerPayment(appointmentId);
+            return ResponseEntity.ok(Map.of("init_point", url));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", e.getMessage()));
+        }
     }
 
     @GetMapping("/{payment_id}")
